@@ -25,6 +25,7 @@ export default {
       animation: {
         marquee: 'marquee 20s linear infinite',
         pulseslide: 'pulseslide 2s cubic-bezier(0.77, 0, 0.175, 1) infinite',
+        dropLine: 'dropLine 2s infinite ease-in-out',
       },
       keyframes: {
         marquee: {
@@ -32,6 +33,10 @@ export default {
           '100%': { transform: 'translateX(-50%)' },
         },
         pulseslide: {
+          '0%': { transform: 'translateY(-100%)' },
+          '100%': { transform: 'translateY(100%)' },
+        },
+        dropLine: {
           '0%': { transform: 'translateY(-100%)' },
           '100%': { transform: 'translateY(100%)' },
         }
