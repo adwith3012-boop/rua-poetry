@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #fdfbf7;
+    color: #2c2c2c;
+    overflow-x: hidden;
+    cursor: none; /* Custom cursor */
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #fdfbf7;
+}
+::-webkit-scrollbar-thumb {
+  background: #8a2c2c;
+  border-radius: 3px;
+}
+
+/* Custom Cursor */
+.cursor-dot,
+.cursor-outline {
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  z-index: 9999;
+  pointer-events: none;
+}
+.cursor-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #8a2c2c;
+}
+.cursor-outline {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #8a2c2c;
+  transition: width 0.2s, height 0.2s, background-color 0.2s;
+}
+
+/* Typography Utilities */
+.text-justify-last-center {
+  text-align: justify;
+  text-align-last: center;
+}
+
+/* Image Hover Effects */
+.img-container {
+  overflow: hidden;
+}
+.img-zoom {
+  transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.img-container:hover .img-zoom {
+  transform: scale(1.05);
+}
+
+/* Utility for Parallax */
+.parallax-wrapper {
+  position: relative;
+  overflow: hidden;
+}

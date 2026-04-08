@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RUA | Aesthetic Decor</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <!-- Lenis for Smooth Scroll (Updated CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+    <!-- GSAP for Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rua: {
+                            beige: '#fdfbf7', // Light creamy background
+                            sand: '#e8e1d5',  // Darker beige for accents
+                            red: '#8a2c2c',   // Deep vintage red
+                            charcoal: '#2c2c2c',
+                            gold: '#d4af37'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'serif'],
+                        display: ['Cinzel', 'serif'],
+                        sans: ['Manrope', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #fdfbf7;
+            color: #2c2c2c;
+            overflow-x: hidden;
+            cursor: none; /* Custom cursor */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fdfbf7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #8a2c2c;
+            border-radius: 3px;
+        }
+
+        /* Custom Cursor */
+        .cursor-dot,
+        .cursor-outline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .cursor-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #8a2c2c;
+        }
+        .cursor-outline {
+            width: 40px;
+            height: 40px;
+            border: 1px solid #8a2c2c;
+            transition: width 0.2s, height 0.2s, background-color 0.2s;
+        }
+        
+        /* Typography Utilities */
+        .text-justify-last-center {
+            text-align: justify;
+            text-align-last: center;
+        }
+
+        /* Image Hover Effects */
+        .img-container {
+            overflow: hidden;
+        }
+        .img-zoom {
+            transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .img-container:hover .img-zoom {
+            transform: scale(1.05);
+        }
+
+        /* Utility for Parallax */
+        .parallax-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot hidden md:block"></div>
+    <div class="cursor-outline hidden md:block"></div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference text-rua-beige transition-all duration-300" id="navbar">
+        <div class="font-display font-bold text-2xl tracking-widest text-rua-beige">RUA</div>
+        <div class="hidden md:flex space-x-12 font-sans text-xs tracking-[0.2em] uppercase items-center">
+            <a href="#collection" class="hover:text-rua-red transition-colors text-rua-beige">Collection</a>
+            <button onclick="window.toggleAdmin()" class="hover:text-rua-red transition-colors text-rua-beige tracking-[0.2em] uppercase">Owner Login</button>
+            <a href="#" class="hover:text-rua-red transition-colors text-rua-beige">Contact</a>
+        </div>
+        <div class="md:hidden">
+            <button class="text-sm uppercase tracking-widest text-rua-beige">Menu</button>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative w-full h-screen flex items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <!-- Hero Image: Aesthetic Beige & Minimalist -->
+            <img src="https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=2000&auto=format&fit=crop" alt="RUA Hero" class="w-full h-full object-cover opacity-90 scale-105" data-speed="0.5">
+            <div class="absolute inset-0 bg-black/20"></div>
+        </div>
+        
+        <div class="relative z-10 text-center flex flex-col items-center">
+            <!-- Red Accent: Est. 2024 -->
+            <p id="hero-est" class="font-sans text-xs md:text-sm tracking-[0.4em] mb-4 uppercase opacity-0 reveal-text text-rua-red font-semibold drop-shadow-md">Est. 2024</p>
+            
+            <h1 class="font-display text-[18vw] leading-none text-rua-beige mix-blend-overlay opacity-0 reveal-text">RUA</h1>
+            
+            <p id="hero-tagline" class="font-serif italic text-xl md:text-3xl mt-4 tracking-wider opacity-0 reveal-text text-rua-beige">The Art of Living</p>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2">
+            <!-- Red Accent: Scroll Text -->
+            <span class="text-rua-red font-sans text-[10px] tracking-widest uppercase font-bold drop-shadow-sm">Scroll</span>
+            <div class="w-[1px] h-12 bg-rua-beige/30 overflow-hidden">
+                <!-- Red Accent: Scroll Bar -->
+                <div class="w-full h-full bg-rua-red animate-pulseslide"></div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- INTRO SECTION -->
+        <section class="min-h-[80vh] flex items-center justify-center px-6 py-24 bg-rua-beige relative">
+            <div class="max-w-4xl mx-auto text-center">
+                <span class="block text-rua-red font-sans text-xs tracking-[0.3em] uppercase mb-8 reveal-scroll">Philosophy</span>
+                <h2 id="philosophy-quote" class="font-serif text-4xl md:text-6xl text-rua-charcoal leading-tight mb-10 reveal-scroll">
+                    "Design is not just what it looks like and feels like. <span class="text-rua-red italic">Design is how it works.</span>"
+                </h2>
+                <div class="flex justify-center">
+                    <p id="philosophy-text" class="font-sans text-rua-charcoal/70 max-w-lg text-sm md:text-base leading-relaxed text-justify-last-center reveal-scroll">
+                        RUA encapsulates the essence of timeless aesthetics. We blend raw materials with refined craftsmanship to create spaces that breathe. Our collection is an ode to the imperfect beauty of nature and the precision of modern architecture.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SPLIT LAYOUT 1 -->
+        <section class="py-20 px-4 md:px-12 bg-rua-beige">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-24 items-center">
+                <div class="order-2 md:order-1 reveal-scroll">
+                    <div class="img-container relative aspect-[3/4] overflow-hidden">
+                        <!-- Image 2: Vertical Detail -->
+                        <img src="https://images.unsplash.com/photo-1615529182904-14819c35db37?q=80&w=800&auto=format&fit=crop" alt="Interior Detail" class="w-full h-full object-cover img-zoom">
+                        <div class="absolute bottom-4 right-4 bg-rua-beige/90 px-4 py-2 backdrop-blur-sm">
+                            <span class="font-display text-rua-red text-sm">01. Living</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2 space-y-8 reveal-scroll">
+                    <h3 class="font-display text-5xl md:text-7xl text-rua-charcoal">Serene <br> <span class="pl-12 text-rua-red italic font-serif">Sanctuary</span></h3>
+                    <p class="font-sans text-rua-charcoal/80 leading-relaxed max-w-md">
+                        Every object in a room tells a story. Our living collection focuses on organic textures and warm, neutral tones that invite calmness. From hand-carved wood to soft linens, we curate for the soul.
+                    </p>
+                    <a href="#" class="inline-block border-b border-rua-red pb-1 text-rua-red font-sans text-xs tracking-widest uppercase hover:text-rua-charcoal hover:border-rua-charcoal transition-colors">View Collection</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- PARALLAX WIDE SECTION -->
+        <section class="w-full py-20 overflow-hidden">
+            <div class="relative w-full h-[60vh] md:h-[80vh] overflow-hidden parallax-wrapper">
+                <!-- Image 3: Wide Atelier Shot -->
+                <img src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=2000&auto=format&fit=crop" alt="Wide Interior" class="absolute top-0 left-0 w-full h-[120%] object-cover" data-speed="0.2">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="bg-rua-beige/90 p-8 md:p-16 max-w-lg text-center shadow-2xl reveal-scroll">
+                        <span class="text-rua-red font-display text-2xl mb-2 block">The Atelier</span>
+                        <p class="font-serif italic text-rua-charcoal text-lg">"Where craftsmanship meets vision."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ZIG ZAG / MASONRY LAYOUT -->
+        <section class="py-24 px-4 bg-rua-beige">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex flex-col md:flex-row gap-12 mb-24">
+                    <div class="md:w-1/3 pt-12 reveal-scroll">
+                        <h4 class="font-display text-3xl text-rua-charcoal mb-4">Texture & <br><span class="text-rua-red">Form</span></h4>
+                        <p class="font-sans text-sm text-rua-charcoal/70 mb-8">
+                            Exploring the tactile nature of our surroundings. The interplay of light and shadow on structured surfaces.
+                        </p>
+                        <div class="img-container aspect-[4/5]">
+                            <!-- Image 4: Texture/Ceramics -->
+                            <img src="https://images.unsplash.com/photo-1594809222692-071a171d9d4c?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover img-zoom" alt="Texture Detail">
+                        </div>
+                    </div>
+                    <div class="md:w-2/3 reveal-scroll" data-delay="0.2">
+                        <div class="img-container aspect-video w-full h-full">
+                            <!-- Image 5: Room View -->
+                            <img src="https://images.unsplash.com/photo-1617104424032-b9bd6972d0e4?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover img-zoom" alt="Room View">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col md:flex-row-reverse gap-12 items-end">
+                    <div class="md:w-5/12 reveal-scroll">
+                        <div class="img-container aspect-[3/4]">
+                            <!-- Image 6: Red/Beige Accent Vase -->
+                            <img src="https://images.unsplash.com/photo-1534349762913-96c225597341?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover img-zoom" alt="Decor Item">
+                        </div>
+                        <div class="mt-6 flex justify-between items-baseline border-t border-rua-charcoal/10 pt-4">
+                            <span class="font-display text-xl text-rua-charcoal">Vase No. 4</span>
+                            <span class="font-sans text-xs text-rua-red tracking-widest uppercase">Ceramic</span>
+                        </div>
+                    </div>
+                    <div class="md:w-5/12 pb-12 reveal-scroll" data-delay="0.2">
+                        <div class="img-container aspect-square">
+                            <!-- Image 7: Minimalist Corner -->
+                            <img src="https://images.unsplash.com/photo-1505693416388-33eb16280520?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover img-zoom" alt="Minimalist Corner">
+                        </div>
+                        <p class="font-serif text-2xl italic text-right mt-6 text-rua-charcoal">
+                            Simplicity is the ultimate <br> sophistication.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MARQUEE SECTION -->
+        <section class="py-12 bg-rua-red overflow-hidden whitespace-nowrap">
+            <div class="inline-flex animate-marquee">
+                <span class="text-[10vw] font-display text-rua-beige/20 px-8">AESTHETICS</span>
+                <span class="text-[10vw] font-serif italic text-rua-beige/20 px-8">Interiors</span>
+                <span class="text-[10vw] font-display text-rua-beige/20 px-8">TIMELESS</span>
+                <span class="text-[10vw] font-serif italic text-rua-beige/20 px-8">Design</span>
+                <!-- Duplicate for loop -->
+                <span class="text-[10vw] font-display text-rua-beige/20 px-8">AESTHETICS</span>
+                <span class="text-[10vw] font-serif italic text-rua-beige/20 px-8">Interiors</span>
+                <span class="text-[10vw] font-display text-rua-beige/20 px-8">TIMELESS</span>
+                <span class="text-[10vw] font-serif italic text-rua-beige/20 px-8">Design</span>
+            </div>
+        </section>
+
+        <!-- FEATURED HIGHLIGHT -->
+        <section class="py-24 px-6 md:px-20 bg-rua-beige flex flex-col items-center">
+            <div class="relative w-full max-w-5xl h-[70vh] reveal-scroll">
+                <!-- Image 8: The Red Thread (Subtle red accent in room) -->
+                <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?q=80&w=1200&auto=format&fit=crop" alt="Featured Space" class="w-full h-full object-cover">
+                <div class="absolute -bottom-10 -right-4 md:-right-10 bg-rua-sand p-8 md:p-12 shadow-xl max-w-sm">
+                    <h5 class="font-display text-2xl text-rua-charcoal mb-4">The Red Thread</h5>
+                    <p class="font-sans text-sm text-rua-charcoal/80 mb-6">
+                        A subtle connection of color throughout the home. Our signature red accentuates without overwhelming.
+                    </p>
+                    <button class="bg-rua-red text-rua-beige font-sans text-xs tracking-widest uppercase px-6 py-3 hover:bg-rua-charcoal transition-colors">
+                        Explore
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRODUCT PLACEMENTS (REPLACED VISUAL INDEX) -->
+        <section id="collection" class="py-24 bg-white">
+            <div class="container mx-auto px-6 max-w-7xl">
+                <div class="text-center mb-16">
+                    <span class="text-rua-red font-sans text-xs tracking-[0.3em] uppercase">Curated Objects</span>
+                    <h3 class="font-display text-4xl mt-4 text-rua-charcoal">Product Placements</h3>
+                    <p class="font-sans text-rua-charcoal/60 max-w-lg mx-auto mt-4 text-sm">Discover our signature pieces. Direct inquiries are handled personally via WhatsApp to ensure a bespoke experience.</p>
+                </div>
+                <!-- Dynamic Grid for Products -->
+                <div id="dynamic-product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+                    <!-- Products will be injected here via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="bg-rua-charcoal text-rua-beige px-6 py-20">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div class="col-span-1 md:col-span-2">
+                    <h2 class="font-display text-6xl md:text-8xl mb-6">RUA</h2>
+                    <p class="font-serif italic text-white/50 max-w-sm">
+                        Curating spaces that inspire, calm, and endure.
+                    </p>
+                </div>
+                <div>
+                    <h6 class="font-sans text-xs tracking-widest uppercase text-rua-red mb-6">Connect</h6>
+                    <ul class="space-y-4 font-sans text-sm text-white/70">
+                        <li><a href="#" class="hover:text-white">Instagram</a></li>
+                        <li><a href="#" class="hover:text-white">Pinterest</a></li>
+                        <li><a href="#" class="hover:text-white">LinkedIn</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h6 class="font-sans text-xs tracking-widest uppercase text-rua-red mb-6">Contact</h6>
+                    <ul class="space-y-4 font-sans text-sm text-white/70">
+                        <li>hello@rua-decor.com</li>
+                        <li>+1 (555) 000-0000</li>
+                        <li class="pt-4">
+                            123 Aesthetic Avenue<br>
+                            Design District, NY
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-white/10 mt-20 pt-8 flex justify-between items-center text-xs font-sans text-white/30 uppercase tracking-widest">
+                <span>© 2024 RUA Decor</span>
+                <span>All Rights Reserved</span>
+            </div>
+        </footer>
+    </main>
+
+    <!-- ADMIN PORTAL MODAL -->
+    <div id="admin-modal" class="fixed inset-0 bg-rua-beige z-[100] hidden overflow-y-auto">
+        <button onclick="window.toggleAdmin()" class="absolute top-8 right-8 text-rua-charcoal font-sans text-xs tracking-[0.2em] uppercase hover:text-rua-red transition-colors">Close ✕</button>
+        
+        <!-- Login View -->
+        <div id="login-view" class="min-h-screen flex items-center justify-center">
+            <div class="bg-white p-12 max-w-md w-full shadow-2xl text-center">
+                <h2 class="font-display text-3xl text-rua-charcoal mb-2">Atelier Access</h2>
+                <p class="font-sans text-xs text-rua-charcoal/60 tracking-widest uppercase mb-8">Owner Portal</p>
+                
+                <input type="text" id="adminUser" placeholder="Username (admin)" class="w-full font-sans text-sm p-4 mb-4 bg-rua-beige border border-rua-charcoal/10 focus:outline-none focus:border-rua-red transition-colors">
+                <input type="password" id="adminPass" placeholder="Password (password)" class="w-full font-sans text-sm p-4 mb-8 bg-rua-beige border border-rua-charcoal/10 focus:outline-none focus:border-rua-red transition-colors">
+                
+                <button onclick="window.adminLogin()" class="w-full bg-rua-charcoal text-rua-beige font-sans text-xs tracking-[0.2em] uppercase py-4 hover:bg-rua-red transition-colors">Enter</button>
+            </div>
+        </div>
+
+        <!-- Dashboard View -->
+        <div id="dashboard-view" class="hidden min-h-screen py-20 px-6 max-w-5xl mx-auto">
+            <div class="flex justify-between items-end mb-12 border-b border-rua-charcoal/10 pb-6">
+                <div>
+                    <h2 class="font-display text-4xl text-rua-charcoal">Inventory Management</h2>
+                    <p class="font-sans text-sm text-rua-charcoal/60 mt-2">Add or remove product placements.</p>
+                </div>
+                <button onclick="window.adminLogout()" class="text-rua-red font-sans text-xs tracking-widest uppercase hover:text-rua-charcoal transition-colors border border-rua-red hover:border-rua-charcoal px-6 py-2">Sign Out</button>
+            </div>
+
+            <!-- Edit Landing Page Content Form -->
+            <div class="bg-white p-8 shadow-sm mb-12">
+                <h3 class="font-display text-2xl text-rua-charcoal mb-2">Edit Landing Page Content</h3>
+                <p class="font-sans text-xs text-rua-red tracking-widest uppercase mb-6">Note: Content is currently saved locally to your browser. To make changes live for all visitors on Vercel, a database must be connected.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block font-sans text-xs tracking-widest uppercase text-rua-charcoal/60 mb-2">Hero Established Text</label>
+                        <input type="text" id="editHeroEst" class="w-full font-sans text-sm p-4 bg-rua-beige border border-rua-charcoal/10 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block font-sans text-xs tracking-widest uppercase text-rua-charcoal/60 mb-2">Hero Tagline</label>
+                        <input type="text" id="editHeroTagline" class="w-full font-sans text-sm p-4 bg-rua-beige border border-rua-charcoal/10 focus:outline-none">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block font-sans text-xs tracking-widest uppercase text-rua-charcoal/60 mb-2">Philosophy Quote (HTML allowed)</label>
+                        <textarea id="editPhilosophyQuote" class="w-full font-sans text-sm p-4 bg-rua-beige border border-rua-charcoal/10 focus:outline-none" rows="2"></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="block font-sans text-xs tracking-widest uppercase text-rua-charcoal/60 mb-2">Philosophy Body Text</label>
+                        <textarea id="editPhilosophyText" class="w-full font-sans text-sm p-4 bg-rua-beige border border-rua-charcoal/10 focus:outline-none" rows="4"></textarea>
+                    </div>
+                </div>
+                <button onclick="window.saveContent()" class="mt-8 bg-rua-charcoal text-rua-beige font-sans text-xs tracking-[0.2em] uppercase px-8 py-4 hover:bg-rua-red transition-colors">Save Page Content</button>
+            </div>
+
+            <!-- Add Product Form -->
+            <div class="bg-white p-8 shadow-sm mb-12">
+                <h3 class="font-display text-2xl text-rua-charcoal mb-6">List New Object</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="text" id="newProdName" placeholder="Object Title" class="font-sans text-sm p-4 bg-rua-beige border border-rua-charcoal/10 focus:outline-none">
+                    <input type="number" id="newProdPrice" placeholder="Price (₹)" class="font-sans text-sm p-4 bg-rua-beige border border-rua-charcoal/10 focus:outline-none">
+                    <div class="md:col-span-2">
+                        <label class="block font-sans text-xs tracking-widest uppercase text-rua-charcoal/60 mb-2">Upload Image</label>
+                        <input type="file" id="newProdImage" accept="image/*" class="w-full font-sans text-sm p-3 bg-rua-beige border border-rua-charcoal/10 focus:outline-none">
+                    </div>
+                </div>
+                <button onclick="window.addProduct()" class="mt-8 bg-rua-red text-rua-beige font-sans text-xs tracking-[0.2em] uppercase px-8 py-4 hover:bg-rua-charcoal transition-colors">Publish to Storefront</button>
+            </div>
+
+            <!-- Product List -->
+            <div>
+                <h3 class="font-display text-2xl text-rua-charcoal mb-6">Current Offerings</h3>
+                <div id="admin-product-list" class="space-y-4">
+                    <!-- JS renders list here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Product Management & WhatsApp Logic ---
+        window.WA_NUMBER = "919876543210"; // Set your WhatsApp Business number here (Include Country Code, No '+' sign)
+        window.isAdminLoggedIn = false;
+
+        // --- Landing Page Content Logic ---
+        const defaultContent = {
+            heroEst: "Est. 2024",
+            heroTagline: "The Art of Living",
+            philosophyQuote: "\"Design is not just what it looks like and feels like. <span class='text-rua-red italic'>Design is how it works.</span>\"",
+            philosophyText: "RUA encapsulates the essence of timeless aesthetics. We blend raw materials with refined craftsmanship to create spaces that breathe. Our collection is an ode to the imperfect beauty of nature and the precision of modern architecture."
+        };
+
+        let siteContent = {};
+        try {
+            const storedContent = localStorage.getItem('ruaDecorContent');
+            siteContent = storedContent ? JSON.parse(storedContent) : defaultContent;
+        } catch(e) {
+            siteContent = defaultContent;
+        }
+
+        window.renderContent = function() {
+            // Update Public UI
+            document.getElementById('hero-est').innerHTML = siteContent.heroEst;
+            document.getElementById('hero-tagline').innerHTML = siteContent.heroTagline;
+            document.getElementById('philosophy-quote').innerHTML = siteContent.philosophyQuote;
+            document.getElementById('philosophy-text').innerHTML = siteContent.philosophyText;
+
+            // Populate Admin Form
+            document.getElementById('editHeroEst').value = siteContent.heroEst;
+            document.getElementById('editHeroTagline').value = siteContent.heroTagline;
+            document.getElementById('editPhilosophyQuote').value = siteContent.philosophyQuote;
+            document.getElementById('editPhilosophyText').value = siteContent.philosophyText;
+        };
+
+        window.saveContent = function() {
+            siteContent = {
+                heroEst: document.getElementById('editHeroEst').value,
+                heroTagline: document.getElementById('editHeroTagline').value,
+                philosophyQuote: document.getElementById('editPhilosophyQuote').value,
+                philosophyText: document.getElementById('editPhilosophyText').value
+            };
+            localStorage.setItem('ruaDecorContent', JSON.stringify(siteContent));
+            window.renderContent();
+            alert("Landing page content updated locally.");
+        };
+
+        // Default aesthetic products if storage is empty
+        const defaultProducts = [
+            { id: 1, name: "The Alabaster Vessel", price: 4200, image: "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?q=80&w=800&auto=format&fit=crop" },
+            { id: 2, name: "Raw Earth Bowl", price: 2850, image: "https://images.unsplash.com/photo-1594809222692-071a171d9d4c?q=80&w=800&auto=format&fit=crop" },
+            { id: 3, name: "No. 4 Crimson Accent", price: 5600, image: "https://images.unsplash.com/photo-1534349762913-96c225597341?q=80&w=800&auto=format&fit=crop" }
+        ];
+
+        // Load from storage
+        let storefrontProducts = [];
+        try {
+            const stored = localStorage.getItem('ruaDecorProducts');
+            storefrontProducts = stored ? JSON.parse(stored) : defaultProducts;
+            if(!stored) localStorage.setItem('ruaDecorProducts', JSON.stringify(defaultProducts));
+        } catch(e) {
+            storefrontProducts = defaultProducts;
+        }
+
+        // Render Public Storefront
+        window.renderStorefront = function() {
+            const grid = document.getElementById('dynamic-product-grid');
+            if(!grid) return;
+            
+            if(storefrontProducts.length === 0) {
+                grid.innerHTML = `<p class="col-span-full text-center font-sans text-rua-charcoal/50 italic">The collection is currently being curated.</p>`;
+                return;
+            }
+
+            grid.innerHTML = storefrontProducts.map(p => `
+                <div class="group cursor-pointer flex flex-col reveal-scroll">
+                    <div class="aspect-[3/4] bg-rua-beige overflow-hidden mb-6 relative">
+                        <img src="${p.image}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" alt="${p.name}">
+                        <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
+                            <button onclick="window.orderViaWA('${p.name}', ${p.price})" class="bg-rua-red text-rua-beige font-sans text-xs tracking-widest uppercase px-8 py-4 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:bg-rua-charcoal">
+                                Inquire via WhatsApp
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-baseline border-t border-rua-charcoal/10 pt-4">
+                        <span class="font-display text-xl text-rua-charcoal">${p.name}</span>
+                        <span class="font-sans text-sm text-rua-charcoal/60">₹${p.price.toLocaleString()}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            // Refresh GSAP triggers for newly added elements if it's already initialized
+            if (typeof ScrollTrigger !== 'undefined') setTimeout(() => ScrollTrigger.refresh(), 100);
+        };
+
+        // WhatsApp Order Link Generator
+        window.orderViaWA = function(name, price) {
+            const message = `Hello RUA Decor, I am interested in inquiring about the "${name}" listed for ₹${price.toLocaleString()}. Is this piece currently available?`;
+            const waUrl = `https://wa.me/${window.WA_NUMBER}?text=${encodeURIComponent(message)}`;
+            window.open(waUrl, '_blank');
+        };
+
+        // --- Admin Portal Logic ---
+        window.toggleAdmin = function() {
+            const modal = document.getElementById('admin-modal');
+            modal.classList.toggle('hidden');
+            if(!modal.classList.contains('hidden') && window.isAdminLoggedIn) {
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.remove('hidden');
+                window.renderAdminList();
+            }
+        };
+
+        window.adminLogin = function() {
+            const u = document.getElementById('adminUser').value;
+            const p = document.getElementById('adminPass').value;
+            if(u === 'admin' && p === 'password') {
+                window.isAdminLoggedIn = true;
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('dashboard-view').classList.remove('hidden');
+                window.renderAdminList();
+            } else {
+                alert("Incorrect Atelier Credentials");
+            }
+        };
+
+        window.adminLogout = function() {
+            window.isAdminLoggedIn = false;
+            document.getElementById('adminUser').value = '';
+            document.getElementById('adminPass').value = '';
+            document.getElementById('dashboard-view').classList.add('hidden');
+            document.getElementById('login-view').classList.remove('hidden');
+        };
+
+        window.renderAdminList = function() {
+            const list = document.getElementById('admin-product-list');
+            if(storefrontProducts.length === 0) {
+                list.innerHTML = `<p class="font-sans text-sm text-rua-charcoal/60 italic">No objects currently listed.</p>`;
+                return;
+            }
+            list.innerHTML = storefrontProducts.map(p => `
+                <div class="flex items-center justify-between bg-white p-4 border border-rua-charcoal/10">
+                    <div class="flex items-center gap-4">
+                        <img src="${p.image}" class="w-16 h-16 object-cover bg-rua-beige">
+                        <div>
+                            <p class="font-display text-lg text-rua-charcoal">${p.name}</p>
+                            <p class="font-sans text-xs text-rua-charcoal/60">₹${p.price.toLocaleString()}</p>
+                        </div>
+                    </div>
+                    <button onclick="window.deleteProduct(${p.id})" class="text-rua-red font-sans text-xs tracking-widest uppercase hover:underline">Revoke</button>
+                </div>
+            `).join('');
+        };
+
+        window.addProduct = async function() {
+            const name = document.getElementById('newProdName').value;
+            const price = parseInt(document.getElementById('newProdPrice').value);
+            const imageInput = document.getElementById('newProdImage');
+
+            if(!name || !price || !imageInput.files[0]) {
+                alert("Please provide a title, price, and image.");
+                return;
+            }
+
+            try {
+                // Convert Image to Base64 for local storage
+                const base64Image = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => resolve(e.target.result);
+                    reader.onerror = reject;
+                    reader.readAsDataURL(imageInput.files[0]);
+                });
+
+                const newObj = {
+                    id: Date.now(),
+                    name: name,
+                    price: price,
+                    image: base64Image
+                };
+
+                storefrontProducts.push(newObj);
+                localStorage.setItem('ruaDecorProducts', JSON.stringify(storefrontProducts));
+                
+                // Reset Form
+                document.getElementById('newProdName').value = '';
+                document.getElementById('newProdPrice').value = '';
+                document.getElementById('newProdImage').value = '';
+                
+                window.renderAdminList();
+                window.renderStorefront();
+                alert("Object successfully published to storefront.");
+
+            } catch(e) {
+                alert("Error saving object. The image file might be too large for local browser storage.");
+                storefrontProducts.pop(); // Revert
+            }
+        };
+
+        window.deleteProduct = function(id) {
+            if(confirm("Remove this object from the storefront?")) {
+                storefrontProducts = storefrontProducts.filter(p => p.id !== id);
+                localStorage.setItem('ruaDecorProducts', JSON.stringify(storefrontProducts));
+                window.renderAdminList();
+                window.renderStorefront();
+            }
+        };
+
+        document.addEventListener("DOMContentLoaded", (event) => {
+            // Render storefront and page content immediately on load
+            window.renderStorefront();
+            window.renderContent();
+
+            // --- Custom Cursor Logic ---
+            const cursorDot = document.querySelector('.cursor-dot');
+            const cursorOutline = document.querySelector('.cursor-outline');
+
+            window.addEventListener('mousemove', (e) => {
+                const posX = e.clientX;
+                const posY = e.clientY;
+
+                // Dot follows instantly
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+
+                // Outline follows with lag (handled by animation frame below or simple CSS transition)
+                cursorOutline.animate({
+                    left: `${posX}px`,
+                    top: `${posY}px`
+                }, { duration: 500, fill: "forwards" });
+            });
+
+            // Add hover effect to links and images
+            const hoverables = document.querySelectorAll('a, button, .img-container, .group');
+            hoverables.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursorOutline.style.width = '60px';
+                    cursorOutline.style.height = '60px';
+                    cursorOutline.style.borderColor = 'transparent';
+                    cursorOutline.style.backgroundColor = 'rgba(138, 44, 44, 0.2)'; // semi-transparent red
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursorOutline.style.width = '40px';
+                    cursorOutline.style.height = '40px';
+                    cursorOutline.style.borderColor = '#8a2c2c';
+                    cursorOutline.style.backgroundColor = 'transparent';
+                });
+            });
+
+            // --- Lenis Smooth Scroll ---
+            if (typeof Lenis !== 'undefined') {
+                const lenis = new Lenis({
+                    duration: 1.2,
+                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                    direction: 'vertical',
+                    gestureDirection: 'vertical',
+                    smooth: true,
+                    mouseMultiplier: 1,
+                    smoothTouch: false,
+                    touchMultiplier: 2,
+                });
+
+                function raf(time) {
+                    lenis.raf(time);
+                    requestAnimationFrame(raf);
+                }
+                requestAnimationFrame(raf);
+            } else {
+                console.warn('Lenis library not loaded');
+            }
+
+            // --- GSAP Animations ---
+            if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+                gsap.registerPlugin(ScrollTrigger);
+
+                // Hero Reveal
+                const heroTl = gsap.timeline();
+                heroTl.to('.reveal-text', {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1.5,
+                    stagger: 0.2,
+                    ease: "power3.out",
+                    delay: 0.5
+                });
+
+                // Scroll Triggered Reveals for Sections
+                const revealElements = document.querySelectorAll('.reveal-scroll');
+                revealElements.forEach(element => {
+                    gsap.fromTo(element, 
+                        { y: 50, opacity: 0 },
+                        {
+                            y: 0,
+                            opacity: 1,
+                            duration: 1,
+                            ease: "power3.out",
+                            scrollTrigger: {
+                                trigger: element,
+                                start: "top 85%", // Trigger when top of element hits 85% of viewport
+                            }
+                        }
+                    );
+                });
+
+                // Parallax Effect for Images
+                document.querySelectorAll('img[data-speed]').forEach(img => {
+                    gsap.to(img, {
+                        y: (i, target) => -100 * target.dataset.speed,
+                        ease: "none",
+                        scrollTrigger: {
+                            trigger: img.parentElement,
+                            start: "top bottom",
+                            end: "bottom top",
+                            scrub: true
+                        }
+                    });
+                });
+            }
+
+            // Navbar color change on scroll
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('py-4');
+                    navbar.classList.remove('py-6');
+                } else {
+                    navbar.classList.add('py-6');
+                    navbar.classList.remove('py-4');
+                }
+            });
+
+            // Marquee Animation Configuration in Tailwind Config (manual CSS used here for simplicity)
+            const styleSheet = document.createElement("style");
+            styleSheet.innerText = `
+                @keyframes marquee {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                }
+                .animate-marquee {
+                    animation: marquee 20s linear infinite;
+                }
+                @keyframes pulseslide {
+                    0% { transform: translateY(-100%); }
+                    100% { transform: translateY(100%); }
+                }
+                .animate-pulseslide {
+                    animation: pulseslide 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+                }
+            `;
+            document.head.appendChild(styleSheet);
+        });
+
+    </script>
+</body>
+</html>
